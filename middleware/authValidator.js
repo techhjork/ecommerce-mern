@@ -1,5 +1,6 @@
 const {check, validationResult} = require('express-validator');
-
+const pool = require('../config/pool')
+const verifyToken = require("../utils/verifyToken")
 
 exports.registerGetValidtor = [
   (req,res,next)=>{
@@ -95,3 +96,21 @@ exports.logoutPost = [
   res.redirect('/login');
  }
 ]
+
+
+exports.protect = async (req,res,next)=>{
+   if(!req.cookies.jwt){
+     return res.redirect("/")
+   }
+   
+
+   let token = req.cookies.jwt
+   
+   let decode = await verifyToken(token)
+
+   let user = await pool.execute(`SELECT id,name,email FROM user WHERE email=?`,[decode.user.email]);
+   console.log('it is from Database',user[0])
+   req.user = decode.user
+
+   next()
+}

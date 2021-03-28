@@ -41,9 +41,6 @@ exports.loginPostController = async function(req,res){
 
 
     const token = generateToken(payload)
-    
-    req.user = payload.user
-    console.log(req.user)
 
     res.cookie('jwt', token, cookieOptions);
     res.redirect("/");

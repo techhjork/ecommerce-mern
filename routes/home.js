@@ -15,8 +15,10 @@ const {
      } 
      = require("../controller/authController")
 
+const {protect} = require("../middleware/authValidator")
+
 router.route("/")
-.get(homeController)
+.get(protect,homeController)
 
 router.route("/shop")
 .get(shopController)

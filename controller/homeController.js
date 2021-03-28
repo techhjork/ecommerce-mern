@@ -1,8 +1,8 @@
 
 
 exports.homeController =function(req,res){
-  console.log(req.user)
-  res.render("index")
+  console.log("homeController",req.user)
+  res.render("index",{user:req.user})
 }
 
 exports.shopController =function(req,res){
