@@ -1,0 +1,23 @@
+
+<% if (typeof errors !== "undefined") { %>
+    <% errors.forEach(function(error) { %>
+      <div class="alert alert-<%= error ? 'danger':'success' %>" role="alert" id="loginAlert">  
+        <p id="errors" style="text-align: center;">
+          <%= error.msg %>
+        </p>
+     </div>
+   <%})%>
+  <%}%>
+
+
+ 
+      <div class="alert alert-danger" role="alert" id="loginAlert">  
+        <p id="urlErrors" style="text-align: center;"></p>
+     </div>
+     <script type="text/javascript">
+		const urlParams = new URLSearchParams(window.location.search);
+		const myParam = urlParams.get('error');
+		document.getElementById("urlErrors").innerText = myParam
+	 </script>
+
+ 
