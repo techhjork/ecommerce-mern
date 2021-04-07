@@ -1,0 +1,19 @@
+<div class="container">
+	<div class="row d-flex justify-content-center align-items-center">
+	<div class="col-lg-6">
+			<img src="<%= product.image_path %>" class="img-fluid" />
+	</div>
+	<div class="col-lg-6">
+		<h1 class="h1">Name: <%= product.product_name %> </h1>
+		<div class="">QTY: <%= product.qty %> </div>
+		<div class="">Description: <%= product.description %> </div>
+
+		<div class="btn-group">
+		 <a href="/product/edit/<%= product.product_id %>" class="btn btn-info m-3">Edit</a>
+		 <form action="/product/delete/<%= product.product_id %>" method="POST">
+		  <button class="btn btn-danger m-3"  type="submit">Delete</button>
+		</form>
+		</div>
+	</div>
+   </div>
+</div>

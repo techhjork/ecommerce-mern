@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken")
 const pool = require('../config/pool')
 const bcrypt = require("bcryptjs");
 const generateToken = require("../utils/generateToken")
+const catchAsync = require("../utils/catchAsync");
 
 const cookieOptions = {
   expires:new Date(
@@ -16,38 +17,41 @@ const cookieOptions = {
 
 
 
-exports.loginController =function(req,res){
+exports.loginController = catchAsync( async (req,res)=> {
   res.render("login")
-}
+})
 
 
-exports.loginPostController = async function(req,res){
+exports.loginPostController = catchAsync(async (req,res)=>{
 
    let {email,password} = req.body
    let userExist = await pool.execute(`SELECT * FROM user WHERE email=?`, [email]);
+   let hashpassword = await bcrypt.compare(password,userExist[0][0].password)
 
-   password = await bcrypt.compare(password,userExist[0][0].password)
-   if(userExist[0].length > 0 && password){
+   console.log(email,hashpassword)
+   if(userExist[0].length > 0 && hashpassword){
      
-     const {name,email,id} = userExist[0][0]
+     const {name,email,id,role} = userExist[0][0]
      // JWT  
      const payload = {
-        user:{
+        user:{ 
           id:id,
           name:name,
-          email:email
+          email:email,
+          role:role
         }
       };
 
 
     const token = generateToken(payload)
-
+    
     res.cookie('jwt', token, cookieOptions);
     res.redirect("/");
    }else{
-     res.render("login",{errors:[{msg:`credential not match`}]})
+    res.redirect(`/auth/login?error=${encodeURIComponent(`CREDENTIAL NOT MATCH`)}`)
+     // res.render("login",{errors:[{msg:`credential not match`}]})
    }
-}
+})
 
 
 
@@ -55,15 +59,15 @@ exports.loginPostController = async function(req,res){
 
 
 
-exports.registerController =function(req,res){
+exports.registerController =catchAsync( async (req,res)=>{
   res.render("register")
-}
+})
 
 
 
 
 
-exports.registerPostController = async function(req,res){
+exports.registerPostController = catchAsync( async (req,res)=>{
     let {name,email,password,cpassword} = req.body
     console.log(req.body)
 
@@ -77,7 +81,6 @@ exports.registerPostController = async function(req,res){
     try{
       let salt = await bcrypt.genSalt(10)
       let hashPassword = await bcrypt.hash(password,salt)
-         
       let userExist = await pool.execute(`SELECT * FROM user WHERE email=?`, [email]);
       console.log(userExist[0])
       if(userExist[0].length > 0){
@@ -86,7 +89,7 @@ exports.registerPostController = async function(req,res){
         // res.json({errors:`user with this ${email} already exist`}) 
       }else{
          let data = await pool.execute(`INSERT INTO user(name,email,password) VALUES(?,?,?)`, [name,email,hashPassword]);
-
+     
          res.redirect(`/auth/login`);
          res.json(data)  
       }
@@ -95,7 +98,7 @@ exports.registerPostController = async function(req,res){
      console.log(err)
       res.send("err",err.message)
     }   
-}
+})
 
     // pool.execute(`INSERT INTO user(name,email,password) VALUES(?,?,?)`,
     //   [name,email,hashPassword]
@@ -118,7 +121,7 @@ exports.registerPostController = async function(req,res){
 //   })
 // }
      
-exports.logoutController = async function(req,res){
+exports.logoutController = catchAsync( async (req,res)=>{
      if (!req.cookies.jwt) {
       // console.log('NOT logged in');
         // req.flash('message', 'You must Login First');
@@ -132,4 +135,4 @@ exports.logoutController = async function(req,res){
     });
     // res.clearCookie("jwt");
     res.redirect('/');
-}
+})

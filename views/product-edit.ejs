@@ -1,0 +1,27 @@
+<div class="container col-md-5 px-3">
+  <h1 class="text-center">Edit Product</h1>
+<form action="/product/edit/<%= product.product_id %>"  method="POST" enctype="multipart/form-data">
+   <div class="form-group">
+    <label for="exampleInputEmail1">Name</label>
+    <input type="hidden" name="id" value="<%= typeof product !== 'undefined' ? product.product_id : "" %>">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Name</label>
+    <input type="text" name="product" value="<%= typeof product !== 'undefined' ? product.product_name : "" %>" class="form-control" placeholder="Product">
+  </div>
+    <div class="form-group">
+    <label for="exampleInputPassword1">Price(in $)</label>
+    <input type="number" name="price"  value="<%= typeof product !== 'undefined' ? product.price : "" %>" id="exampleInputPassword1" placeholder="Price" class="form-control">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Quantity</label>
+    <input type="number" name="qty" value="<%= typeof product !== 'undefined' ? product.qty : "" %>" class="form-control" id="exampleInputPassword1" placeholder="Price">
+  </div>
+ <div class="cont"></div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Desc</label>
+    <textarea name="description" class="form-control" placeholder="Description"><%= typeof product !== 'undefined' ? product.description : "" %></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary btn-block">Create Product</button>
+</form>
+</div>

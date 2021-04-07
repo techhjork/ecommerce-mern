@@ -100,7 +100,7 @@ exports.logoutPost = [
 
 exports.protect = async (req,res,next)=>{
    if(!req.cookies.jwt){
-     return res.redirect("/")
+     return res.redirect("/auth/login")
    }
    
 
@@ -108,9 +108,11 @@ exports.protect = async (req,res,next)=>{
    
    let decode = await verifyToken(token)
 
-   let user = await pool.execute(`SELECT id,name,email FROM user WHERE email=?`,[decode.user.email]);
-   console.log('it is from Database',user[0])
+   // let user = await pool.execute(`SELECT id,name,email,role FROM user WHERE email=?`,[decode.user.email]);
+   // console.log('it is from Database',user[0])
    req.user = decode.user
 
    next()
 }
+
+

@@ -1,29 +1,31 @@
 <div class="container px-3">
   <h1 class="text-center">Shop Now</h1>
 <div class="card-group ">
-  <div class="card m-3">
-    <img class="card-img-top" src="..." alt="Card image cap">
+  <% if(typeof products !== 'undefined' && products.length > 0){%>
+ <% products.forEach(function(product,index){ %>
+  <div class="card m-3 col-lg-3 col-md-5 col-12">
+    <img class="card-img-top" src="<%= product.image_path %>" alt="Card image cap">
     <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+      <h5 class="card-title">Product Name: <%= product.product_name%></h5>
+      <p class="card-text">Descption: <%=product.description%></p>
+      <p class="card-text"><small class="text-muted">Quantity: <%=product.qty%></small></p>
+      <div class="card-footer" style="padding: 1.25rem 0rem;text-align: center;">
+        <% if(role == "admin"){ %>
+         <a href="/product/view/<%= product.product_id %>" class="btn btn-danger btn-block">View</a>
+        <%}else{ %>
+        <div class="btn-group">
+          <a href="/cart" class="btn btn-danger">Add to cart</a>
+          <a href="/buy" class="btn btn-danger">Buy Now</a>
+        </div>
+        <%} %>
+      </div>
     </div>
   </div>
-  <div class="card m-3">
-    <img class="card-img-top" src="..." alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-    </div>
-  </div>
-  <div class="card m-3">
-    <img class="card-img-top" src="..." alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-    </div>
-  </div>
+  <%})}else{%>
+      <div style="height: 50vh" class="d-flex justify-content-center align-items-center flex-column">
+       <h1 class="">No Product Found</h1>
+       <span class="h3"><a class="link text-danger" href="/"></a></span>
+      </div>
+  <%}%>
 </div>
 </div>

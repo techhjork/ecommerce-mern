@@ -3,12 +3,113 @@ const app = express()
 const path = require("path")
 const ejs = require("ejs")
 const bodyParser = require("body-parser")
-//let session = require('express-session');
-//var MySQLStore = require('express-mysql-session')(session);
+const fileUpload = require('express-fileupload')
+
+app.use(fileUpload())
 
 
 var cookieParser = require('cookie-parser')
 app.use(cookieParser())
+
+
+const expressLayouts = require('express-ejs-layouts');
+app.use(expressLayouts);
+app.use(express.static(path.join(__dirname, 'public')));
+app.set('view engine', 'ejs');  
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
+
+const port = process.env.PORT || 9000
+
+const seed = require("./seed")()
+
+
+app.use("/auth", require("./routes/auth") )
+app.use(require("./routes/home") )
+app.get("*",(req,res)=>{
+  res.render("404")
+})
+
+
+app.listen(9000,(err)=>{
+   if(err){ 
+   	console.log(err)
+    return false
+   } 
+   console.log(`connected: http://localhost:${port}`)
+}) 
+
+
+
+// const express = require("express")
+// const app = express()
+
+// app.get("/",(req,res)=>{
+//   res.send("aa")
+// })
+
+// app.listen(9000,()=>{
+//   console.log("9000")
+// })
+
+
+
+
+
+// File Upload
+
+// const express = require("express")
+// const app = express()
+// const multer  = require('multer')
+// const cors = require("cors")
+
+
+// const storage = multer.diskStorage({
+// 	destination: (req,res,cb)=> cb(null,"./uploads"),
+// 	filename:(req,file,cb)=>{
+//       const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1E9)}${path.extname(file.originalname)}`;
+//       cb(null,uniqueName)
+// 	}
+// })
+
+// let upload = multer({storage,limits:{ fileSize: 1000000 * 100 } }).single('myfile')
+// app.use(cors())
+
+// app.get("/",(req,res)=>{
+//   res.send("aaaa")
+// })
+
+// app.post("/",(req,res)=>{
+
+// 	console.log(req.body)
+//   upload(req,res,(err)=>{
+//      if(err) res.status(500).json({error:err});
+//      console.log("storage",storage)
+//      res.status(200).json({"storage":storage});
+//   })
+// })
+
+// app.listen(9000,()=>{
+// 	console.log("This is http://localhost:9000")
+// })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//let session = require('express-session');
+//var MySQLStore = require('express-mysql-session')(session);
+
 
 // var options = {
 // 	host: 'localhost',
@@ -41,36 +142,7 @@ app.use(cookieParser())
 
 // app.use(session(sessionOptions));
 
-
-
-const expressLayouts = require('express-ejs-layouts');
-app.use(expressLayouts);
-app.use(express.static(path.join(__dirname, 'public')));
-app.set('view engine', 'ejs');  
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-
-
-const port = process.env.PORT || 9000
-
-
-app.use("/auth", require("./routes/auth") )
-app.use(require("./routes/home") )
-app.get("*",(req,res)=>{
-  res.render("404")
-})
-
-
-app.listen(port,(err)=>{
-   if(err){ 
-   	console.log(err)
-    return false
-   } 
-   console.log(`connected: http://localhost:${port}`)
-})
-
-
-
+/*------------------------------ Socket Checking --------------------------*/
 
 // const express = require("express")
 // const app = express()
