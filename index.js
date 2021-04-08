@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }))
 
 
 const port = process.env.PORT || 9000
-
+ 
 const seed = require("./seed")()
 
 
@@ -30,6 +30,10 @@ app.use(require("./routes/home") )
 app.get("*",(req,res)=>{
   res.render("404")
 })
+
+app.use(function(err,req,res,next) {
+    res.status(500).json({err_code:err.code,msg:err.message});
+});
 
 
 app.listen(9000,(err)=>{

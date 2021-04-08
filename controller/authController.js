@@ -1,10 +1,14 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken") 
+const nodemailer = require("nodemailer");
+
+const sendMail = require("../utils/email")
 
 const pool = require('../config/pool')
 const bcrypt = require("bcryptjs");
 const generateToken = require("../utils/generateToken")
 const catchAsync = require("../utils/catchAsync");
+
 
 const cookieOptions = {
   expires:new Date(
@@ -78,6 +82,7 @@ exports.registerPostController = catchAsync( async (req,res)=>{
          // res.json({errors:[{msg:"password and confirm password would me same"}]})
       }
 
+
     try{
       let salt = await bcrypt.genSalt(10)
       let hashPassword = await bcrypt.hash(password,salt)
@@ -88,10 +93,25 @@ exports.registerPostController = catchAsync( async (req,res)=>{
          res.render(`register`,{errors:[{msg:`user with email: ${email} already exist`}]});
         // res.json({errors:`user with this ${email} already exist`}) 
       }else{
+        
          let data = await pool.execute(`INSERT INTO user(name,email,password) VALUES(?,?,?)`, [name,email,hashPassword]);
-     
+         
+
+ 
+          await sendMail({
+            email,
+            message:"Hellow bro",
+            subject: 'Your Account Activation Link for Blogen App !',
+            text: "Hello world?", 
+             html: "<b>Hello world?</b>", 
+            // user: newUser,
+            // template: 'signupEmail.ejs',
+            // url: activationURL,
+          });
+
+
          res.redirect(`/auth/login`);
-         res.json(data)  
+         // res.json(data)  
       }
 
     }catch(err){

@@ -12,7 +12,9 @@ const {
      productDeletePostController,
      productViewController,
      addToCartController,
-     buyNowController
+     buyNowController,
+     addToCartPostController,
+     buyNowPostController
      } 
      = require("../controller/homeController")
  
@@ -31,12 +33,15 @@ router.route("/shop")
 .get(protect,shopController)
 
 router.route("/wishlist")
+.all(protect)
 .get(wishlistController)
 
 router.route("/cart")
+ .all(protect)
 .get(cartController)
 
 router.route("/product/edit/:id")
+.all(protect)
 .get(productEditController)
 .post(productEditPostController)
 
@@ -49,14 +54,18 @@ router.route("/product/delete/:id")
 
 
 router.route("/create-product")
-.get(protect,createProductController)
+ .all(protect)
+.get(createProductController)
 .post(createPostProductController)
 
 router.route("/cart")
  .get(addToCartController)
+ .post(addToCartPostController)
+
 
 router.route("/buy")
  .get(buyNowController)
+ .post(buyNowPostController)
 
 
 
